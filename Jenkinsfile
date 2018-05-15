@@ -2,14 +2,14 @@ pipeline {
    agent any
 
    stages {
-       stage('Test') {
-           steps {
-               /* `make check` returns non-zero on test failures,
-               * using `true` to allow the Pipeline to continue nonetheless
-               */
-               sh 'make check || true'
-               junit '**/target/*.xml'
-           }
-       }
+       stage('Unit test') {
+            steps {
+              // Compile and run the unit tests for the app and its dependencies
+              sh './gradlew testDebugUnitTest testDebugUnitTest'
+
+              // Analyse the test results and update the build result as appropriate
+              junit '**/TEST-*.xml'
+            }
+          }
    }
 }
