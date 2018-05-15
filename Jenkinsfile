@@ -17,5 +17,11 @@ pipeline {
                 echo 'Deploying....'
             }
         }
+
+        stage("Unit test") {
+                   steps {
+                       sh "./gradlew test --info"
+                   }
+               }
     }
 }
