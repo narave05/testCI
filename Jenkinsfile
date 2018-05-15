@@ -1,25 +1,22 @@
-pipeline {
-    agent any
-
-    stages {
-        stage('Build') {
-            steps {
-                echo 'Building..'
-            }
-        }
-       stage('Unit test') {
-             steps {
-               // Compile and run the unit tests for the app and its dependencies
-               sh './gradlew testDebugUnitTest'
-
-               // Analyse the test results and update the build result as appropriate
-               junit '**/TEST-*.xml'
-             }
-           }
-        stage('Deploy') {
-            steps {
-                echo 'Deploying....'
-            }
-        }
+node('android') {
+   step([$class: 'StashNotifier'])
+   checkout scm
+   stage('Build') {
+     try {
+       sh './gradlew --refresh-dependencies clean assemble'
+       lock('emulator') {
+         sh './gradlew connectedCheck'
+       }
+        currentBuild.result = 'SUCCESS'
+      } catch(error) {
+        slackSend channel: '#build-failures', color: 'bad', message: "This build is broken ${env.BUILD_URL}", token: 'XXXXXXXXXXX'
+        currentBuild.result = 'FAILURE'
+      } finally {
+        junit '**/test-results/**/*.xml'
+      }
     }
+    stage('Archive') {
+      archiveArtifacts 'app/build/outputs/apk/*'
+    }
+    step([$class: 'StashNotifier'])
 }
