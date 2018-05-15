@@ -14,10 +14,10 @@ pipeline {
            sh './gradlew compileDebugSources'
          }
        }
-       stage('Unit test') {
+       stage('Run unit test') {
          steps {
            // Compile and run the unit tests for the app and its dependencies
-           sh './gradlew testDebugUnitTest testDebugUnitTest'
+           sh './gradlew testDebugUnitTest'
 
            // Analyse the test results and update the build result as appropriate
            junit '**/TEST-*.xml'
