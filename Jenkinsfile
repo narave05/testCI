@@ -20,7 +20,7 @@ pipeline {
             steps {
             echo 'Hello World'
               // Compile and run the unit tests for the app and its dependencies
-              sh './gradlew testDebugUnitTest '
+              sh './gradlew testDebugUnitTest testDebugUnitTest '
             }
           }
    }
