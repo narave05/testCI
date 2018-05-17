@@ -1,14 +1,21 @@
 pipeline {
-   agent any
+    agent any
 
-   stages {
-       stage('Unit test') {
+    stages {
+        stage('Build') {
             steps {
-            echo 'Hello World'
-              // Compile and run the unit tests for the app and its dependencies
-
-               sh './gradlew testDebugUnitTest testDebugUnitTest'
+                echo 'Building..'
             }
-          }
-   }
+        }
+        stage('Test') {
+            steps {
+                echo 'Testing..'
+            }
+        }
+        stage('Deploy') {
+            steps {
+                echo 'Deploying....'
+            }
+        }
+    }
 }
